@@ -2,6 +2,8 @@ import os
 
 from flask import Flask, request, abort
 
+from waitress import serve
+
 from linebot import LineBotApi, WebhookHandler
 from linebot.exceptions import InvalidSignatureError
 from linebot.models import (
@@ -134,4 +136,4 @@ class Commands:
 
 
 if __name__ == "__main__":
-    app.run()
+    serve(app, host="0.0.0.0", port=8080)
