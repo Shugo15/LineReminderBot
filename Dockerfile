@@ -7,4 +7,4 @@ RUN pip install --upgrade -r requirements.txt
 
 COPY . /bot
 
-CMD python -u main.py
+CMD ./run.sh

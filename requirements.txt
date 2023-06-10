@@ -2,3 +2,5 @@ flask
 waitress
 line-bot-sdk
 psycopg2
+schedule
+pytz

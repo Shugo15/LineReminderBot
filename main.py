@@ -14,6 +14,7 @@ from linebot.models import (
 
 import psycopg2
 
+
 app = Flask(__name__)
 
 line_bot_api = LineBotApi(os.environ["LINE_CHANNEL_ACCESS_TOKEN"])
@@ -102,7 +103,7 @@ class Commands:
                     id = result[0] + 1
 
                 cursor.execute(
-                    """INSERT INTO event (id, name, event_date) VALUES (%s,%s, %s)""",
+                    """INSERT INTO event (id, name, event_date) VALUES (%(int)s,%(str)s, %(date)s)""",
                     [id, tokens[1], tokens[2]],
                 )
 
@@ -128,7 +129,7 @@ class Commands:
                 before_columns = result[0]
 
                 cursor.execute(
-                    """DELETE FROM event WHERE name = %s AND event_date = %s""",
+                    """DELETE FROM event WHERE name = %(str)s AND event_date = %(date)s""",
                     [tokens[1], tokens[2]],
                 )
 
