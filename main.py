@@ -44,7 +44,7 @@ def callback():
 
 @handler.add(MessageEvent, message=TextMessage)
 def handle_message(event):
-    print("""[text] {event.message.text}""")
+    print(f"""[text] {event.message.text}""")
 
     Commands.help(event)
 
