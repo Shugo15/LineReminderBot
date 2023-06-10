@@ -53,6 +53,8 @@ def handle_message(event):
 
     Commands.show(event)
 
+    Commands.melton(event)
+
 
 prefix = "!"
 
@@ -174,6 +176,17 @@ class Commands:
                 reply_message += "\n\n"
 
         line_bot_api.reply_message(event.reply_token, TextSendMessage(reply_message))
+
+    def melton(event):
+        tokens = event.message.text.split()
+
+        if len(tokens) != 1:
+            return
+
+        if tokens[0] != f"{prefix}melton":
+            return
+
+        line_bot_api.reply_message(event.reply_token, TextSendMessage("ﾄﾞｩﾒﾙﾄﾝﾃﾞｰｽ!"))
 
 
 if __name__ == "__main__":
