@@ -67,7 +67,14 @@ class Commands:
         if tokens[0] != f"{prefix}help":
             return
 
-        reply_message = f"{prefix}register name date : イベントを登録\n※dateはYYYY-MM-DDの形式\n{prefix}show : 全てのイベントを表示"
+        reply_message = (
+            f"{prefix}register name date : イベントを登録\n"
+            f"※dateはYYYY-MM-DDの形式\n"
+            f"\n"
+            f"{prefix}delete name date : イベントを削除\n"
+            f"\n"
+            f"{prefix}show : 全てのイベントを表示"
+        )
 
         print("ヘルプを表示")
 
