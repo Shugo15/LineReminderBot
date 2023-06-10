@@ -103,7 +103,7 @@ class Commands:
                     id = result[0] + 1
 
                 cursor.execute(
-                    """INSERT INTO event (id, name, event_date) VALUES (%(int)s,%(str)s, %(date)s)""",
+                    """INSERT INTO event (id, name, event_date) VALUES (%s,%s, %s)""",
                     [id, tokens[1], tokens[2]],
                 )
 
@@ -129,7 +129,7 @@ class Commands:
                 before_columns = result[0]
 
                 cursor.execute(
-                    """DELETE FROM event WHERE name = %(str)s AND event_date = %(date)s""",
+                    """DELETE FROM event WHERE name = %s AND event_date = %s""",
                     [tokens[1], tokens[2]],
                 )
 
