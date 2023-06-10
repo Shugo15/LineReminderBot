@@ -49,6 +49,8 @@ def handle_message(event):
 
     Commands.register(event)
 
+    Commands.delete(event)
+
     Commands.show(event)
 
 
@@ -83,24 +85,57 @@ class Commands:
         with psycopg2.connect(os.environ["DATABASE_URL"]) as connection:
             with connection.cursor() as cursor:
                 cursor.execute("""SELECT MAX(id) AS max_id FROM event""")
-                max_id = cursor.fetchone()
+                result = cursor.fetchone()
 
-                if max_id[0] == None:
+                if result[0] == None:
                     id = 0
                 else:
-                    id = max_id[0] + 1
+                    id = result[0] + 1
 
-                query = (
-                    """INSERT INTO event (id, name, event_date) VALUES (%s,%s, %s)"""
+                cursor.execute(
+                    """INSERT INTO event (id, name, event_date) VALUES (%s,%s, %s)""",
+                    [id, tokens[1], tokens[2]],
                 )
-
-                cursor.execute(query, [id, tokens[1], tokens[2]])
 
             connection.commit()
 
         print("イベントを登録")
 
         line_bot_api.reply_message(event.reply_token, TextSendMessage("イベントを登録しました"))
+
+    def delete(event):
+        tokens = event.message.text.split()
+
+        if len(tokens) != 3:
+            return
+
+        if tokens[0] != f"{prefix}delete":
+            return
+
+        with psycopg2.connect(os.environ["DATABASE_URL"]) as connection:
+            with connection.cursor() as cursor:
+                cursor.execute("""SELECT COUNT(*) FROM event""")
+                result = cursor.fetchone()
+                before_columns = result[0]
+
+                cursor.execute(
+                    """DELETE FROM event WHERE name = %s AND event_date = %s""",
+                    [tokens[1], tokens[2]],
+                )
+
+                cursor.execute("""SELECT COUNT(*) FROM event""")
+                result = cursor.fetchone()
+                after_columns = result[0]
+
+                delete_count = before_columns - after_columns
+
+            connection.commit()
+
+        print(f"{delete_count}件のイベントを削除")
+
+        line_bot_api.reply_message(
+            event.reply_token, TextSendMessage(f"{delete_count}件のイベントを削除しました")
+        )
 
     def show(event):
         tokens = event.message.text.split()
@@ -115,7 +150,6 @@ class Commands:
             with connection.cursor() as cursor:
                 cursor.execute("""SELECT name, event_date FROM event""")
                 result = cursor.fetchall()
-                print(result)
 
             connection.commit()
 
